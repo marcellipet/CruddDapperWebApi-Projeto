@@ -24,8 +24,21 @@ namespace CruddDapperWebApi.Services
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
-                var usuariobanco = await connection.QueryFirstAsync<Usuario>("select * from Usuario where id = @Id", new { Id = usuarioId });
+                var usuarioBanco = await connection.QueryFirstOrDefaultAsync<Usuario>("select * from Usuario where id = @Id", new { Id = usuarioId });
+
+                if(usuarioBanco == null)
+                {
+                    response.Mensagem = "Nenhum usuário localizado!";
+                    response.Status = false;
+                    return response;
+                }
+
+                var usuarioMapeado = _mapper.Map<UsuarioListarDto>(usuarioBanco);
+                response.Dados = usuarioMapeado;
+                response.Mensagem = "Usuário localizado com sucesso!";
             }
+
+            return response;
         }
 
         public async Task<ResponseModel<List<UsuarioListarDto>>> BuscarUsuarios()
