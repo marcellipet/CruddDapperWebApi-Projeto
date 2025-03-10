@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Runtime.CompilerServices;
 using AutoMapper;
 using CruddDapperWebApi.Dto;
 using CruddDapperWebApi.Models;
@@ -23,8 +24,11 @@ namespace CruddDapperWebApi.Services
             ResponseModel<UsuarioListarDto> response = new ResponseModel<UsuarioListarDto>();
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-            {
+            
+            { 
                 var usuarioBanco = await connection.QueryFirstOrDefaultAsync<Usuario>("select * from Usuario where id = @Id", new { Id = usuarioId });
+
+
 
                 if(usuarioBanco == null)
                 {
@@ -64,6 +68,38 @@ namespace CruddDapperWebApi.Services
             }
 
             return response;
+        }
+
+        public async Task<ResponseModel<List<UsuarioListarDto>>> CriarUsuario(UsuarioCriarDto usuarioCriarDto)
+        {
+            ResponseModel<List<UsuarioListarDto>> response = new ResponseModel<List<UsuarioListarDto>>();
+
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                var usuarioBanco = await connection.ExecuteAsync("insert into Usuario (NomeCompleto, Email, Cargo, Salario, CPF, Senha, Situacao) " +
+                                                                               "values(@NomeCompleto, @Email, @Cargo, @Salario, @CPF, @Senha, @Situacao)", usuarioCriarDto);
+                if(usuarioBanco == 0)
+                {
+                    response.Mensagem = "Ocorreu um erro ao realizar o registo!";
+                    response.Status = false;
+                    return response;
+                }
+
+                var usuarios = await ListarUsuarios(connection);
+
+            
+                var usuariosMapeados = _mapper.Map<List<UsuarioListarDto>>(usuarios);
+
+                response.Dados = usuariosMapeados;
+                response.Mensagem = "usuarios listados com sucesso";
+            }
+
+            return response;
+        }
+
+        private static async Task<IEnumerable<Usuario>> ListarUsuarios(SqlConnection connection)
+        {
+            return await connection.QueryAsync<Usuario>("select * from Usuarios");
         }
     }
 }

@@ -1,5 +1,8 @@
-﻿namespace CruddDapperWebApi.Models
+﻿using Dapper.Contrib.Extensions;
+
+namespace CruddDapperWebApi.Models
 {
+    [Table("Usuarios")]
     public class Usuario
     {
         public int Id { get; set; }
@@ -8,5 +11,6 @@
         public string Cargo { get; set; }
         public double Salario { get; set; }
         public bool Situacao { get; set; }// 1 - Ativo; 0 - Inativo
+        public string Senha { get; set; }
     }
 }
