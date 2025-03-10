@@ -43,5 +43,19 @@ namespace CruddDapperWebApi.Controllers
             return Ok(usuarios);
         }
 
+        [HttpPost]
+
+        public async Task<IActionResult> CriarUsuario(UsuarioCriarDto usuarioCriarDto)
+        {
+            var usuario = await _usuarioInterface.CriarUsuario(usuarioCriarDto);
+
+            if (usuario.Status == false)
+            {
+                return Bad(usuario);
+            }
+
+            return Ok(usuario);
+        }
+
     }
 }
