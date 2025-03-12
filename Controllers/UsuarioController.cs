@@ -45,13 +45,13 @@ namespace CruddDapperWebApi.Controllers
 
         [HttpPost]
 
-        public async Task<IActionResult> CriarUsuario(UsuarioCriarDto usuarioCriarDto)
+        public async Task<ActionResult<ResponseModel<UsuarioCriarDto>>> CriarUsuario(UsuarioCriarDto usuarioCriarDto)
         {
             var usuario = await _usuarioInterface.CriarUsuario(usuarioCriarDto);
 
             if (usuario.Status == false)
             {
-                return Bad(usuario);
+                return BadRequest(usuario);
             }
 
             return Ok(usuario);

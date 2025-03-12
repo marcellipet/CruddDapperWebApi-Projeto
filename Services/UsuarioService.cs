@@ -26,7 +26,7 @@ namespace CruddDapperWebApi.Services
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             
             { 
-                var usuarioBanco = await connection.QueryFirstOrDefaultAsync<Usuario>("select * from Usuario where id = @Id", new { Id = usuarioId });
+                var usuarioBanco = await connection.QueryFirstOrDefaultAsync<Usuario>("select * from Usuarios where id = @Id", new { Id = usuarioId });
 
 
 
@@ -76,8 +76,8 @@ namespace CruddDapperWebApi.Services
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
-                var usuarioBanco = await connection.ExecuteAsync("insert into Usuario (NomeCompleto, Email, Cargo, Salario, CPF, Senha, Situacao) " +
-                                                                               "values(@NomeCompleto, @Email, @Cargo, @Salario, @CPF, @Senha, @Situacao)", usuarioCriarDto);
+                var usuarioBanco = await connection.ExecuteAsync("insert into Usuarios (NomeCompleto, Email, Cargo, Salario, Senha, Situacao) " +
+                                                                               "values(@NomeCompleto, @Email, @Cargo, @Salario, @Senha, @Situacao)", usuarioCriarDto);
                 if(usuarioBanco == 0)
                 {
                     response.Mensagem = "Ocorreu um erro ao realizar o registo!";
