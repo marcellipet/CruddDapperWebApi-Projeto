@@ -43,6 +43,7 @@ namespace CruddDapperWebApi.Controllers
             return Ok(usuarios);
         }
 
+
         [HttpPost]
 
         public async Task<ActionResult<ResponseModel<UsuarioCriarDto>>> CriarUsuario(UsuarioCriarDto usuarioCriarDto)
@@ -54,6 +55,28 @@ namespace CruddDapperWebApi.Controllers
                 return BadRequest(usuario);
             }
 
+            return Ok(usuario);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<ResponseModel<UsuarioEditarDto>>> EditarUsuario(UsuarioEditarDto usuarioEditarDto)
+        {
+            var usuario = await _usuarioInterface.EditarUsuario(usuarioEditarDto);
+            if (usuario.Status == false)
+            {
+                return BadRequest(usuario);
+            }
+            return Ok(usuario);
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult<ResponseModel<UsuarioListarDto>>> RemoverUsuario(int usuarioId)
+        {
+            var usuario = await _usuarioInterface.RemoverUsuario(usuarioId);
+            if (usuario.Status == false)
+            {
+                return BadRequest(usuario);
+            }
             return Ok(usuario);
         }
 
